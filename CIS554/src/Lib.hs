@@ -1,9 +1,5 @@
--- module Lib
---     ( CIS554
---     ) where
-
--- someFunc :: IO ()
--- someFunc = putStrLn "someFunc"
+-- Exercises taken from: https://www.cis.upenn.edu/~matuszek/cis554-2016/Assignments/haskell-01-exercises.html
+-- github.com/vrmiguel/fp-exercises
 
 -- Returns True if the element occurs in the list. 
 member :: Eq a => a -> [a] -> Bool
@@ -88,11 +84,25 @@ equalSet setA setB = forall (\x -> belongsToBoth x setA setB) (setA ++ setB)
 		| not (member element setB) = False
 		| otherwise = True
 
+-- The set of values that are in the first set but not in the second set. 
+setDiff :: Eq a => [a] -> [a] -> [a]
+setDiff setA setB = [x | x <- setA, not (member x setB)]
 
+-- The set of values that are in either or both sets.
+setUnion :: Eq a => [a] -> [a] -> [a]
+setUnion setA setB = [x | x <- makeSet (setA ++ setB), (belongsToEither x setA setB)]
+    where belongsToEither element setA setB
+		| member element setA = True
+		| member element setB = True
+		| otherwise = False
 
-
-
-
+-- The set of values that are in both sets.
+setIntersection :: Eq a => [a] -> [a] -> [a]
+setIntersection setA setB = [x | x <- makeSet (setA ++ setB), (belongsToBoth x setA setB)]
+	where belongsToBoth element setA setB
+		| not (member element setA) = False
+		| not (member element setB) = False
+		| otherwise = True
 
 -- majority' :: Eq a => [a] -> a -> Int -> Maybe a
 -- majority' (x:xs) currentCandidate counter
