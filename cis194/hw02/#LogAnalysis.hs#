@@ -1,0 +1,15 @@
+{-# OPTIONS_GHC -Wall #-}
+module LogAnalysis where
+
+import Log
+import Control.Monad
+
+-- readInt   :: String -> Int
+
+parseMessage :: String -> LogMessage
+parseMessage msg = case msg of 
+    ('I':rest) -> LogMessage (Error (readInt (head errorWords))) (readInt (errorWords !! 1)) errorText
+        where errorWords = words rest
+              readInt x = read x :: Int
+              errorText = join [errorWords !! i | i <- [2 .. length words - 1]]
+    _  -> Unknown ""
