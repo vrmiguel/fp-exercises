@@ -103,94 +103,32 @@ palindromify s = if s == (reverse s)
                  else palindromify nextString
     where nextString = drop 1 $ reverse $ drop 1 $ reverse s
 
--- ------------------------------------------------------------------------------
--- -- Ex 7: implement safe integer division, that is, a function that
--- -- returns a Just result normally, but Nothing if the divisor is zero.
--- --
--- -- Remember that integer division can be done with the div function.
--- --
--- -- Examples:
--- --   safeDiv 4 2  ==> Just 2
--- --   safeDiv 4 0  ==> Nothing
+------------------------------------------------------------------------------
+-- Ex 7: implement safe integer division, that is, a function that
+-- returns a Just result normally, but Nothing if the divisor is zero.
+--
+-- Remember that integer division can be done with the div function.
+--
+-- Examples:
+--   safeDiv 4 2  ==> Just 2
+--   safeDiv 4 0  ==> Nothing
 
 safeDiv :: Integer -> Integer -> Maybe Integer
 safeDiv _ 0 = Nothing
 safeDiv x y = Just $ x `div` y
 
--- ------------------------------------------------------------------------------
--- -- Ex 8: implement a function greet that greets a person given a first
--- -- name and possibly a last name. The last name is represented as a
--- -- Maybe String value.
--- --
--- -- Examples:
--- --   greet "John" Nothing         ==> "Hello, John!"
--- --   greet "John" (Just "Smith")  ==> "Hello, John Smith!"
+------------------------------------------------------------------------------
+-- Ex 8: implement a function greet that greets a person given a first
+-- name and possibly a last name. The last name is represented as a
+-- Maybe String value.
+--
+-- Examples:
+--   greet "John" Nothing         ==> "Hello, John!"
+--   greet "John" (Just "Smith")  ==> "Hello, John Smith!"
 
--- greet :: String -> Maybe String -> String
--- greet first last = todo
-
--- ------------------------------------------------------------------------------
--- -- Ex 9: safe list indexing. Define a function safeIndex so that
--- --   safeIndex xs i
--- -- gets the element at index i in the list xs. If i is not a valid
--- -- index, Nothing is returned.
--- --
--- -- Examples:
--- --   safeIndex [True] 1            ==> Nothing
--- --   safeIndex [10,20,30] 0        ==> Just 10
--- --   safeIndex [10,20,30] 2        ==> Just 30
--- --   safeIndex [10,20,30] 3        ==> Nothing
--- --   safeIndex ["a","b","c"] (-1)  ==> Nothing
-
--- safeIndex :: [a] -> Int -> Maybe a
--- safeIndex xs i = todo
-
--- ------------------------------------------------------------------------------
--- -- Ex 10: another variant of safe division. This time you should use
--- -- Either to return a string error message.
--- --
--- -- Examples:
--- --   eitherDiv 4 2   ==> Right 2
--- --   eitherDiv 4 0   ==> Left "4/0"
-
--- eitherDiv :: Integer -> Integer -> Either String Integer
--- eitherDiv x y = todo
-
--- ------------------------------------------------------------------------------
--- -- Ex 11: implement the function addEithers, which combines two values of type
--- -- Either String Int into one like this:
--- --
--- -- - If both inputs were Ints, sum the Ints
--- -- - Otherwise, return the first argument that was not an Int
--- --
--- -- Hint! Remember pattern matching
--- --
--- -- Examples:
--- --   addEithers (Right 1) (Right 2) ==> Right 3
--- --   addEithers (Right 1) (Left "fail") ==> Left "fail"
--- --   addEithers (Left "boom") (Left "fail") ==> Left "boom"
-
--- addEithers :: Either String Int -> Either String Int -> Either String Int
--- addEithers a b = todober that integer division can be done with the div function.
--- --
--- -- Examples:
--- --   safeDiv 4 2  ==> Just 2
--- --   safeDiv 4 0  ==> Nothing
-
--- safeDiv :: Integer -> Integer -> Maybe Integer
--- safeDiv x y = todo
-
--- ------------------------------------------------------------------------------
--- -- Ex 8: implement a function greet that greets a person given a first
--- -- name and possibly a last name. The last name is represented as a
--- -- Maybe String value.
--- --
--- -- Examples:
--- --   greet "John" Nothing         ==> "Hello, John!"
--- --   greet "John" (Just "Smith")  ==> "Hello, John Smith!"
-
--- greet :: String -> Maybe String -> String
--- greet first last = todo
+greet :: String -> Maybe String -> String
+greet first Nothing = "Hello, " ++ first ++ "!"
+greet first (Just second) = "Hello, " ++ first ++ " " ++ second ++ "!"
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 9: safe list indexing. Define a function safeIndex so that
@@ -205,33 +143,40 @@ safeDiv x y = Just $ x `div` y
 -- --   safeIndex [10,20,30] 3        ==> Nothing
 -- --   safeIndex ["a","b","c"] (-1)  ==> Nothing
 
--- safeIndex :: [a] -> Int -> Maybe a
--- safeIndex xs i = todo
+safeIndex :: [a] -> Int -> Maybe a
+safeIndex xs i
+    | 0 > i  = Nothing
+    | i > length xs = Nothing
+    | otherwise     = Just $ xs !! i
+
+------------------------------------------------------------------------------
+-- Ex 10: another variant of safe division. This time you should use
+-- Either to return a string error message.
+--
+-- Examples:
+--   eitherDiv 4 2   ==> Right 2
+--   eitherDiv 4 0   ==> Left "4/0"
+
+eitherDiv :: Integer -> Integer -> Either String Integer
+eitherDiv x 0 = Left $ show x ++ "/0"
+eitherDiv x y = Right $ x `div` y
 
 -- ------------------------------------------------------------------------------
--- -- Ex 10: another variant of safe division. This time you should use
--- -- Either to return a string error message.
--- --
--- -- Examples:
--- --   eitherDiv 4 2   ==> Right 2
--- --   eitherDiv 4 0   ==> Left "4/0"
+-- Ex 11: implement the function addEithers, which combines two values of type
+-- Either String Int into one like this:
+--
+-- - If both inputs were Ints, sum the Ints
+-- - Otherwise, return the first argument that was not an Int
+--
+-- Hint! Remember pattern matching
+--
+-- Examples:
+--   addEithers (Right 1) (Right 2) ==> Right 3
+--   addEithers (Right 1) (Left "fail") ==> Left "fail"
+--   addEithers (Left "boom") (Left "fail") ==> Left "boom"
 
--- eitherDiv :: Integer -> Integer -> Either String Integer
--- eitherDiv x y = todo
-
--- ------------------------------------------------------------------------------
--- -- Ex 11: implement the function addEithers, which combines two values of type
--- -- Either String Int into one like this:
--- --
--- -- - If both inputs were Ints, sum the Ints
--- -- - Otherwise, return the first argument that was not an Int
--- --
--- -- Hint! Remember pattern matching
--- --
--- -- Examples:
--- --   addEithers (Right 1) (Right 2) ==> Right 3
--- --   addEithers (Right 1) (Left "fail") ==> Left "fail"
--- --   addEithers (Left "boom") (Left "fail") ==> Left "boom"
-
--- addEithers :: Either String Int -> Either String Int -> Either String Int
--- addEithers a b = todo
+addEithers :: Either String Int -> Either String Int -> Either String Int
+addEithers (Right a) (Right b) = Right $ a + b
+addEithers (Right a) (Left  b) = Left b
+addEithers (Left  a) (Right b) = Left a
+addEithers (Left  a) (Left  b) = Left a
