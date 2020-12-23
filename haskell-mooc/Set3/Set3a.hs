@@ -162,13 +162,17 @@ while check update value = if check value
 --   whileRight (step 100) 1   ==> 128
 --   whileRight (step 1000) 3  ==> 1536
 
--- whileRight :: (a -> Either b a) -> a -> b
--- whileRight f x = todo
+whileRight :: (a -> Either b a) -> a -> b
+whileRight f x = let y = f x
+                 in case y of 
+                    (Left y') -> y'
+                    (Right y') -> whileRight f y'
 
--- -- for the whileRight examples:
--- -- step k x doubles x if it's less than k
--- step :: Int -> Int -> Either Int Int
--- step k x = if x<k then Right (2*x) else Left x
+
+-- for the whileRight examples:
+-- step k x doubles x if it's less than k
+step :: Int -> Int -> Either Int Int
+step k x = if x<k then Right (2*x) else Left x
 
 ------------------------------------------------------------------------------
 -- Ex 9: given a list of strings and a length, return all strings that
@@ -181,12 +185,15 @@ while check update value = if check value
 --
 -- Hint! This is a great use for list comprehensions
 
--- joinToLength :: Int -> [String] -> [String]
--- joinToLength = todo
+joinToLength :: Int -> [String] -> [String]
+joinToLength siz elems = [x ++ y | 
+                          x <- elems, 
+                          y <- elems, 
+                          (length (x ++ y)) == siz]
 
 -- ------------------------------------------------------------------------------
--- -- Ex 10: implement the operator +|+ that returns a list with the first
--- -- elements of its input lists.
+-- Ex 10: implement the operator +|+ that returns a list with the first
+-- elements of its input lists.
 -- --
 -- -- Give +|+ a type signature. NB: It needs to be of the form (+|+) :: x,
 -- -- with the parentheses because +|+ is an infix operator.
@@ -196,6 +203,11 @@ while check update value = if check value
 -- --   [] +|+ [True]        ==> [True]
 -- --   [] +|+ []            ==> []
 
+(+|+) :: [a] -> [a] -> [a]
+(+|+) (x:_) []  = [x]
+(+|+) [] (y:_)  = [y]
+(+|+) [] []     = []
+(+|+) (x:_) (y:_) = x : y : []
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 11: remember the lectureParticipants example from Lecture 2? We
@@ -211,24 +223,30 @@ while check update value = if check value
 -- --   sumRights [Right 1, Left "bad value", Right 2]  ==>  3
 -- --   sumRights [Left "bad!", Left "missing"]         ==>  0
 
--- sumRights :: [Either a Int] -> Int
--- sumRights = todo
+sumRights :: [Either a Int] -> Int
+sumRights [] = 0
+sumRights ((Right x) : xs) = x + sumRights xs
+sumRights ((Left _)  : xs) = sumRights xs
 
--- ------------------------------------------------------------------------------
--- -- Ex 12: recall the binary function composition operation
--- -- (f . g) x = f (g x). In this exercise, your task is to define a function
--- -- that takes any number of functions given as a list and composes them in the
--- -- same order than they appear in the list.
--- --
--- -- Examples:
--- --   multiCompose [] "foo" ==> "foo"
--- --   multiCompose [] 1     ==> 1
--- --   multiCompose [(++"bar")] "foo" ==> "foobar"
--- --   multiCompose [reverse, tail, (++"bar")] "foo" ==> "raboo"
--- --   multiCompose [(3*), (2^), (+1)] 0 ==> 6
--- --   multiCompose [(+1), (2^), (3*)] 0 ==> 2
+------------------------------------------------------------------------------
+-- Ex 12: recall the binary function composition operation
+-- (f . g) x = f (g x). In this exercise, your task is to define a function
+-- that takes any number of functions given as a list and composes them in the
+-- same order than they appear in the list.
+--
+-- Examples:
+--   multiCompose [] "foo" ==> "foo"
+--   multiCompose [] 1     ==> 1
+--   multiCompose [(++"bar")] "foo" ==> "foobar"
+--   multiCompose [reverse, tail, (++"bar")] "foo" ==> "raboo"
+--   multiCompose [(3*), (2^), (+1)] 0 ==> 6
+--   multiCompose [(+1), (2^), (3*)] 0 ==> 2
 
--- multiCompose fs = todo
+multiCompose' xs x = multiCompose (reverse xs) x
+
+multiCompose []  x    = x
+multiCompose [f] x    = f x
+multiCompose (f:fs) x = f $ multiCompose fs x
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 13: let's consider another way to compose multiple functions. Given
@@ -247,39 +265,53 @@ while check update value = if check value
 -- --   multiApp reverse [tail, take 2, reverse] "foo" ==> ["oof","fo","oo"]
 -- --   multiApp concat [take 3, reverse] "race" ==> "racecar"
 
--- multiApp = todo
+mapToList :: [t -> t] -> t -> [t]
+mapToList [] x  = [x]
+mapToList [f] x = [f x]
+mapToList (f:fs) x = (f x) : mapToList fs x 
 
--- ------------------------------------------------------------------------------
--- -- Ex 14: in this exercise you get to implement an interpreter for a
--- -- simple language. You should keep track of the x and y coordinates,
--- -- and interpret the following commands:
--- --
--- -- up -- increment y by one
--- -- down -- decrement y by one
--- -- left -- decrement x by one
--- -- right -- increment x by one
--- -- printX -- print value of x
--- -- printY -- print value of y
--- --
--- -- The interpreter will be a function of type [String] -> [String].
--- -- Its input is a list of commands, and its output is a list of the
--- -- results of the print commands in the input.
--- --
--- -- Both coordinates start at 0.
--- --
--- -- Examples:
--- --
--- -- interpreter ["up","up","up","printY","down","printY"] ==> ["3","2"]
--- -- interpreter ["up","right","right","printY","printX"] ==> ["1","2"]
--- --
--- -- Surprise! after you've implemented the function, try running this in GHCi:
--- --     interact (unlines . interpreter . lines)
--- -- after this you can enter commands on separate lines and see the
--- -- responses to them
--- --
--- -- The suprise will only work if you generate the return list directly
--- -- using (:). If you build the list in an argument to a helper
--- -- function, the surprise won't work.
+multiApp f fs x = f $ mapToList fs x
 
--- interpreter :: [String] -> [String]
--- interpreter commands = todo
+-- ----------------------------------------------------------------------------
+-- Ex 14: in this exercise you get to implement an interpreter for a
+-- simple language. You should keep track of the x and y coordinates,
+-- and interpret the following commands:
+
+-- up -- increment y by one
+-- down -- decrement y by one
+-- left -- decrement x by one
+-- right -- increment x by one
+-- printX -- print value of x
+-- printY -- print value of y
+
+-- The interpreter will be a function of type [String] -> [String].
+-- Its input is a list of commands, and its output is a list of the
+-- results of the print commands in the input.
+
+-- Both coordinates start at 0.
+
+-- Examples:
+
+-- interpreter ["up","up","up","printY","down","printY"] ==> ["3","2"]
+-- interpreter ["up","right","right","printY","printX"] ==> ["1","2"]
+
+-- Surprise! after you've implemented the function, try running this in GHCi:
+--     interact (unlines . interpreter . lines)
+-- after this you can enter commands on separate lines and see the
+-- responses to them
+
+-- The suprise will only work if you generate the return list directly
+-- using (:). If you build the list in an argument to a helper
+-- function, the surprise won't work.
+
+interpreter' :: [String] -> Int -> Int -> [String]
+interpreter' [] _ _= []
+interpreter' (f:fs) x y = case f of "up"     -> interpreter' fs x (y+1)
+                                    "down"   -> interpreter' fs x (y-1)
+                                    "left"   -> interpreter' fs (x-1) y
+                                    "right"  -> interpreter' fs (x+1) y
+                                    "printX" -> (show x) : interpreter' fs x y
+                                    "printY" -> (show y) : interpreter' fs x y
+
+interpreter :: [String] -> [String]
+interpreter commands = interpreter' commands 0 0
