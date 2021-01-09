@@ -228,6 +228,11 @@ sumRights [] = 0
 sumRights ((Right x) : xs) = x + sumRights xs
 sumRights ((Left _)  : xs) = sumRights xs
 
+---- Completing the challenge
+
+sumRights' :: [Either a Int] -> Int
+sumRights' xs = sum $ map (either (\x -> 0) (+0)) xs
+
 ------------------------------------------------------------------------------
 -- Ex 12: recall the binary function composition operation
 -- (f . g) x = f (g x). In this exercise, your task is to define a function
