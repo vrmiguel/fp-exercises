@@ -287,11 +287,15 @@ fromNat :: Nat -> Int
 fromNat Zero = 0
 fromNat (PlusOne n) = 1 + fromNat n
 
+toNatHelper :: Int -> Nat
+toNatHelper z
+    | z == 0 = Zero
+    | True   = PlusOne $ toNatHelper $ z - 1
+
 toNat :: Int -> Maybe Nat
 toNat z
     | z < 0  = Nothing
-    | z == 0 = Just $ Zero
-    | True   = Just $ PlusOne $ ? ? 
+    | True   = Just $ toNatHelper z
 
 ------------------------------------------------------------------------------
 -- Ex 12: While pleasingly simple in its definition, the Nat datatype is not
