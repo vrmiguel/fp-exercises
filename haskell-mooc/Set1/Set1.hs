@@ -46,9 +46,10 @@ quadruple = double . double
 --   distance 1 1 4 5  ==>  5.0
 
 distance :: Double -> Double -> Double -> Double -> Double
-distance xi yi xf yf = let xdist = (xf - xi) ** 2.0
-                           ydist = (yf - yi) ** 2.0
-                        in sqrt (xdist + ydist) 
+distance xi yi xf yf =
+  let xdist = (xf - xi) ** 2.0
+      ydist = (yf - yi) ** 2.0
+  in  sqrt (xdist + ydist)
 
 ------------------------------------------------------------------------------
 -- Ex 5: define the function eeny that returns "eeny" for even inputs
@@ -57,9 +58,8 @@ distance xi yi xf yf = let xdist = (xf - xi) ** 2.0
 -- Ps. have a look at the built in function "even"
 
 eeny :: Integer -> String
-eeny x
-    | even x    = "eeny"
-    | otherwise = "meeny"
+eeny x | even x    = "eeny"
+       | otherwise = "meeny"
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 6: here's the function checkPassword from the course material.
@@ -67,16 +67,14 @@ eeny x
 -- -- "mellon".
 
 inPasswordBank :: String -> Bool
-inPasswordBank word
-    | word == "mellon"    = True
-    | word == "swordfish" = True
-    | otherwise = False
+inPasswordBank word | word == "mellon"    = True
+                    | word == "swordfish" = True
+                    | otherwise           = False
 
 
 checkPassword :: String -> String
-checkPassword password = if inPasswordBank password
-                         then "You're in."
-                         else "ACCESS DENIED!"
+checkPassword password =
+  if inPasswordBank password then "You're in." else "ACCESS DENIED!"
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 7: A postal service prices packages the following way.
@@ -88,10 +86,9 @@ checkPassword password = if inPasswordBank password
 -- -- in grams, and returns the cost in credits.
 
 postagePrice :: Int -> Int
-postagePrice weight
-    | weight <= 500 = 250
-    | weight <= 5000 = 300 + weight
-    | otherwise = 6000
+postagePrice weight | weight <= 500  = 250
+                    | weight <= 5000 = 300 + weight
+                    | otherwise      = 6000
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 8: define a function isZero that returns True if it is given an
@@ -101,7 +98,7 @@ postagePrice weight
 -- --
 -- -- Ps. remember, the type of booleans in haskell is Bool
 
-isZero ::  Integer -> Bool
+isZero :: Integer -> Bool
 isZero 0 = True
 isZero _ = False
 
@@ -112,7 +109,7 @@ isZero _ = False
 
 sumTo :: Integer -> Integer
 sumTo 1 = 1
-sumTo x = x + sumTo (x-1)
+sumTo x = x + sumTo (x - 1)
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 10: power n k should compute n to the power k (i.e. n^k)
@@ -120,7 +117,7 @@ sumTo x = x + sumTo (x-1)
 
 power :: Integer -> Integer -> Integer
 power _ 0 = 1
-power n k = n * (power n (k-1))
+power n k = n * (power n (k - 1))
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 11: ilog3 n should be the number of times you can divide given

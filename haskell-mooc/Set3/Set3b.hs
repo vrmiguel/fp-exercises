@@ -37,9 +37,8 @@
 --   buildList 7 0 3 ==> [3]
 
 buildList :: Int -> Int -> Int -> [Int]
-buildList start count end = if count > 0
-                                then start : buildList start (count - 1) end
-                            else [end]
+buildList start count end =
+  if count > 0 then start : buildList start (count - 1) end else [end]
 
 ------------------------------------------------------------------------------
 -- Ex 2: given i, build the list of sums [1, 1+2, 1+2+3, .., 1+2+..+i]
@@ -49,9 +48,8 @@ buildList start count end = if count > 0
 -- Ps. you'll probably need a recursive helper function
 
 sums' :: Int -> Int -> [Int]
-sums' idx objIdx
-    | objIdx > idx = []
-    | otherwise    = (idx+1) : sums' (idx + 1) objIdx
+sums' idx objIdx | objIdx > idx = []
+                 | otherwise    = (idx + 1) : sums' (idx + 1) objIdx
 
 sums :: Int -> [Int]
 sums i = sums' 0 i
@@ -68,9 +66,9 @@ sums i = sums' 0 i
 --   mylast 0 [1,2,3] ==> 3
 
 mylast :: a -> [a] -> a
-mylast def [] = def
-mylast _ [x] = x
-mylast def (_:xs) = mylast def xs
+mylast def []       = def
+mylast _   [x     ] = x
+mylast def (_ : xs) = mylast def xs
 
 ------------------------------------------------------------------------------
 -- Ex 4: safe list indexing. Define a function indexDefault so that
@@ -92,10 +90,9 @@ mylast def (_:xs) = mylast def xs
 
 indexDefault :: [a] -> Int -> a -> a
 indexDefault [] _ def = def
-indexDefault (x:xs) i def
-    | i == 0 = x
-    | i < 0  = def
-    | True   = indexDefault xs (i-1) def
+indexDefault (x : xs) i def | i == 0 = x
+                            | i < 0  = def
+                            | True   = indexDefault xs (i - 1) def
 
 ------------------------------------------------------------------------------
 -- Ex 5: define a function that checks if the given list is in
@@ -104,11 +101,10 @@ indexDefault (x:xs) i def
 -- Use pattern matching and recursion to iterate through the list.
 
 sorted :: [Int] -> Bool
-sorted [] = True
-sorted [x, y] = x < y
-sorted (x:y:xs) = if x > y 
-                    then False
-                  else sorted (y:xs)
+sorted []           = True
+sorted [x]          = True
+sorted [x, y]       = x < y
+sorted (x : y : xs) = if x > y then False else sorted (y : xs)
 
 ------------------------------------------------------------------------------
 -- Ex 6: compute the partial sums of the given list like this:
@@ -118,9 +114,9 @@ sorted (x:y:xs) = if x > y
 --   sumsOf []       ==>  []
 
 sumsOf :: [Int] -> [Int]
-sumsOf [] = []
-sumsOf [x] = [x]
-sumsOf (x:y:xs) = x : sumsOf ((x+y) : xs)
+sumsOf []           = []
+sumsOf [x         ] = [x]
+sumsOf (x : y : xs) = x : sumsOf ((x + y) : xs)
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement the function merge that merges two sorted lists of
@@ -136,9 +132,8 @@ merge :: [Int] -> [Int] -> [Int]
 merge [] [] = []
 merge xs [] = xs
 merge [] ys = ys
-merge (x:xs) (y:ys) = if x > y 
-                        then x : y : merge xs ys
-                      else y : x : merge xs ys
+merge (x : xs) (y : ys) =
+  if x > y then x : y : merge xs ys else y : x : merge xs ys
 
 ------------------------------------------------------------------------------
 -- Ex 8: define the function mymaximum that takes a list and a
@@ -157,10 +152,10 @@ merge (x:xs) (y:ys) = if x > y
 --     ==> [1,2]
 
 mymaximum :: (a -> a -> Bool) -> a -> [a] -> a
-mymaximum _ maxVal [] = maxVal
-mymaximum biggerThan maxVal (x:xs) = if x `biggerThan` maxVal
-                                   then mymaximum biggerThan x xs
-                                   else mymaximum biggerThan maxVal xs
+mymaximum _          maxVal []       = maxVal
+mymaximum biggerThan maxVal (x : xs) = if x `biggerThan` maxVal
+  then mymaximum biggerThan x xs
+  else mymaximum biggerThan maxVal xs
 
 ------------------------------------------------------------------------------
 -- Ex 9: define a version of map that takes a two-argument function
@@ -174,9 +169,9 @@ mymaximum biggerThan maxVal (x:xs) = if x `biggerThan` maxVal
 -- Use recursion and pattern matching. Do not use any library functions.
 
 map2 :: (a -> b -> c) -> [a] -> [b] -> [c]
-map2 _ [] _ = []
-map2 _ _ [] = []
-map2 f (a:as) (b:bs) = (f a b) : map2 f as bs
+map2 _ []       _        = []
+map2 _ _        []       = []
+map2 f (a : as) (b : bs) = (f a b) : map2 f as bs
 
 ------------------------------------------------------------------------------
 -- Ex 10: implement the function maybeMap, which works a bit like a
@@ -199,7 +194,7 @@ map2 f (a:as) (b:bs) = (f a b) : map2 f as bs
 --   ==> []
 
 maybeMap :: (a -> Maybe b) -> [a] -> [b]
-maybeMap _ [] = []
-maybeMap f (x:xs) = case f x of 
-                    (Just x') -> x' : maybeMap f xs
-                    Nothing   -> maybeMap f xs
+maybeMap _ []       = []
+maybeMap f (x : xs) = case f x of
+  (Just x') -> x' : maybeMap f xs
+  Nothing   -> maybeMap f xs

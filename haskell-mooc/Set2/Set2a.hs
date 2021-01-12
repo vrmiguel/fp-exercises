@@ -1,17 +1,17 @@
 -- Exercise set 2:
---  * Guards
---  * Lists
---  * Maybe
---  * Either
---
--- Functions you will need:
---  * head, tail
---  * take, drop
---  * length
 --  * null
+--  * length
+--  * take, drop
+--  * head, tail
+-- Functions you will need:
+--
+--  * Either
+--  * Maybe
+--  * Lists
+--  * Guards
 
 -- Some imports you'll need. Don't add other imports :)
-import Data.List
+import           Data.List
 
 ------------------------------------------------------------------------------
 -- Ex 1: Define the constant years, that is a list of the values 1982,
@@ -43,10 +43,10 @@ updateAt :: Int -> a -> [a] -> [a]
 updateAt i x xs = updateAt' 0 i x xs
 
 updateAt' :: Int -> Int -> a -> [a] -> [a]
-updateAt' _ _ _ [] = []
-updateAt' curIdx objIdx newElem (x:xs) = if curIdx == objIdx
-                                            then newElem : updateAt' (curIdx + 1) objIdx newElem xs
-                                         else    x       : updateAt' (curIdx + 1) objIdx newElem xs
+updateAt' _      _      _       []       = []
+updateAt' curIdx objIdx newElem (x : xs) = if curIdx == objIdx
+  then newElem : updateAt' (curIdx + 1) objIdx newElem xs
+  else x : updateAt' (curIdx + 1) objIdx newElem xs
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 4: substring i j s should return the substring of s starting at
@@ -63,10 +63,9 @@ substring :: Int -> Int -> String -> String
 substring i j s = substring' 0 i j s
 
 substring' :: Int -> Int -> Int -> String -> String
-substring' curIdx i j (x:xs)
-    | curIdx >= j = ""
-    | curIdx < i = substring' (curIdx + 1) i j xs
-    | otherwise  = x : substring' (curIdx + 1) i j xs
+substring' curIdx i j (x : xs) | curIdx >= j = ""
+                               | curIdx < i = substring' (curIdx + 1) i j xs
+                               | otherwise = x : substring' (curIdx + 1) i j xs
 
 
 -- ------------------------------------------------------------------------------
@@ -98,10 +97,8 @@ isPalindrome str = str == (reverse str)
 -- Beautifully slow 
 palindromify :: String -> String
 palindromify "" = ""
-palindromify s = if s == (reverse s)
-                    then s
-                 else palindromify nextString
-    where nextString = drop 1 $ reverse $ drop 1 $ reverse s
+palindromify s  = if s == (reverse s) then s else palindromify nextString
+  where nextString = drop 1 $ reverse $ drop 1 $ reverse s
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement safe integer division, that is, a function that
@@ -127,7 +124,7 @@ safeDiv x y = Just $ x `div` y
 --   greet "John" (Just "Smith")  ==> "Hello, John Smith!"
 
 greet :: String -> Maybe String -> String
-greet first Nothing = "Hello, " ++ first ++ "!"
+greet first Nothing       = "Hello, " ++ first ++ "!"
 greet first (Just second) = "Hello, " ++ first ++ " " ++ second ++ "!"
 
 -- ------------------------------------------------------------------------------
@@ -144,10 +141,9 @@ greet first (Just second) = "Hello, " ++ first ++ " " ++ second ++ "!"
 -- --   safeIndex ["a","b","c"] (-1)  ==> Nothing
 
 safeIndex :: [a] -> Int -> Maybe a
-safeIndex xs i
-    | 0 > i  = Nothing
-    | i > length xs = Nothing
-    | otherwise     = Just $ xs !! i
+safeIndex xs i | 0 > i         = Nothing
+               | i > length xs = Nothing
+               | otherwise     = Just $ xs !! i
 
 ------------------------------------------------------------------------------
 -- Ex 10: another variant of safe division. This time you should use

@@ -14,10 +14,10 @@
 --  * minimum
 --  * sort
 
-import Data.List
-import Data.Ord
-import qualified Data.Map as Map
-import Data.Array
+import           Data.Array
+import           Data.List
+import qualified Data.Map                      as Map
+import           Data.Ord
 
 ------------------------------------------------------------------------------
 -- Ex 1: implement the function allEqual which returns True if all
@@ -32,11 +32,9 @@ import Data.Array
 -- you remove the Eq a => constraint from the type!
 
 allEqual :: Eq a => [a] -> Bool
-allEqual []  = True
-allEqual [x] = True
-allEqual (x:y:xs) = if x == y
-                       then allEqual (y:xs)
-                     else False
+allEqual []           = True
+allEqual [x         ] = True
+allEqual (x : y : xs) = if x == y then allEqual (y : xs) else False
 
 
 ------------------------------------------------------------------------------
@@ -53,9 +51,8 @@ allEqual (x:y:xs) = if x == y
 
 distinct' :: Eq a => [a] -> [a] -> Bool
 distinct' [] _ = True
-distinct' (x:xs) prev = if elem x prev
-                          then False
-                        else distinct' xs (x : prev)
+distinct' (x : xs) prev =
+  if elem x prev then False else distinct' xs (x : prev)
 
 distinct :: Eq a => [a] -> Bool
 distinct xs = distinct' xs []
@@ -87,7 +84,7 @@ middle x y z = (sort [x, y, z]) !! 1
 --   rangeOf [4,2,1,3]          ==> 3
 --   rangeOf [1.5,1.0,1.1,1.2]  ==> 0.5
 
-rangeOf :: (Num a, Ord a)  => [a] -> a
+rangeOf :: (Num a, Ord a) => [a] -> a
 rangeOf xs = (maximum xs) - (minimum xs)
 
 ------------------------------------------------------------------------------
@@ -109,14 +106,11 @@ sortByLength = sortBy (comparing length)
 
 longest :: Ord a => [[a]] -> [a]
 longest [x] = x
-longest [(x:xs), (y:ys)]
-    | (length (x:xs)) > (length (y:ys)) = (x:xs)
-    | (length (x:xs)) < (length (y:ys)) = (y:ys)
-    | True = if x > y 
-               then (x:xs) 
-             else (y:ys)
+longest [(x : xs), (y : ys)] | (length (x : xs)) > (length (y : ys)) = (x : xs)
+                             | (length (x : xs)) < (length (y : ys)) = (y : ys)
+                             | True = if x > y then (x : xs) else (y : ys)
 
-longest xs = let (x:y:_) = (reverse $ sortByLength xs) in longest [x, y]
+longest xs = let (x : y : _) = (reverse $ sortByLength xs) in longest [x, y]
 
 
 
@@ -134,11 +128,11 @@ longest xs = let (x:y:_) = (reverse $ sortByLength xs) in longest [x, y]
 --   incrementKey True [(True,1),(False,3),(True,4)] ==> [(True,2),(False,3),(True,5)]
 --   incrementKey 'a' [('a',3.4)] ==> [('a',4.4)]
 
-incrementKey :: (Num v, Eq k) => k -> [(k,v)] -> [(k,v)]
-incrementKey _ [] = []
-incrementKey key ((pkey, pval):xs) = if key == pkey 
-                                        then (key, pval + 1) : incrementKey key xs
-                                      else (pkey, pval) : incrementKey key xs
+incrementKey :: (Num v, Eq k) => k -> [(k, v)] -> [(k, v)]
+incrementKey _   []                  = []
+incrementKey key ((pkey, pval) : xs) = if key == pkey
+  then (key, pval + 1) : incrementKey key xs
+  else (pkey, pval) : incrementKey key xs
 
 ------------------------------------------------------------------------------
 -- Ex 7: compute the average of a list of values of the Fractional
@@ -153,9 +147,10 @@ incrementKey key ((pkey, pval):xs) = if key == pkey
 -- length to a Fractional
 
 average :: Fractional a => [a] -> a
-average xs = let sum' = sum xs
-                 length' = fromIntegral $ length xs in
-                 sum' / length'
+average xs =
+  let sum'    = sum xs
+      length' = fromIntegral $ length xs
+  in  sum' / length'
 
 ------------------------------------------------------------------------------
 -- Ex 8: given a map from player name to score and two players, return

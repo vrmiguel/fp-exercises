@@ -30,8 +30,8 @@ countHelper (Just _) x = x
 --   myMaximum [1,3,2]  ==>  3
 
 myMaximum :: [Int] -> Int
-myMaximum [] = 0
-myMaximum (x:xs) = foldr maxHelper x xs
+myMaximum []       = 0
+myMaximum (x : xs) = foldr maxHelper x xs
 
 maxHelper = max
 
@@ -46,7 +46,7 @@ maxHelper = max
 --   sumAndLength []             ==>  (0.0,0)
 --   sumAndLength [1.0,2.0,4.0]  ==>  (7.0,3)
 
-sumAndLength :: [Double] -> (Double,Int)
+sumAndLength :: [Double] -> (Double, Int)
 sumAndLength xs = foldr slHelper slStart xs
 
 slStart = (0, 0)
@@ -81,9 +81,7 @@ largest xs = foldr largestHelper [] xs
 
 -- ?????
 largestHelper :: Int -> [Int] -> [Int]
-largestHelper x (y:ys) =  if x == (maximum (y:ys))
-					 	then [x]
-					  else []
+largestHelper x (y : ys) = if x == (maximum (y : ys)) then [x] else []
 
 ------------------------------------------------------------------------------
 -- Ex 6: get the first element of a list with a fold. Define
@@ -117,4 +115,4 @@ largestHelper x (y:ys) =  if x == (maximum (y:ys))
 
 
 smallestDivisor :: Integer -> Integer
-smallestDivisor n = [ k | k <- [2 ..], n `mod` k == 0] !! 0
+smallestDivisor n = [ k | k <- [2 ..], n `mod` k == 0 ] !! 0

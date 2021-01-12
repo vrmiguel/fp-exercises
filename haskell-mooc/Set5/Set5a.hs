@@ -62,7 +62,8 @@ totalPrice (MkShoppingEntry _ price count) = price * (fromIntegral count)
 --   buyOneMore twoBananas    ==> MkShoppingEntry "Banana" 1.1 3
 
 buyOneMore :: ShoppingEntry -> ShoppingEntry
-buyOneMore (MkShoppingEntry name price count) = (MkShoppingEntry name price (count + 1))
+buyOneMore (MkShoppingEntry name price count) =
+  (MkShoppingEntry name price (count + 1))
 
 ------------------------------------------------------------------------------
 -- Ex 4: define a datatype Person, which should contain the age (an
@@ -118,11 +119,11 @@ getY (Position _ y) = y
 
 -- up increases the y value of a position by one
 up :: Position -> Position
-up (Position x y)    = Position x (y+1)
+up (Position x y) = Position x (y + 1)
 
 -- right increases the x value of a position by one
 -- right :: Position -> Position
-right (Position x y) = Position (x+1) y
+right (Position x y) = Position (x + 1) y
 
 ------------------------------------------------------------------------------
 -- Ex 6: Here's a datatype that represents a student. A student can
@@ -139,10 +140,9 @@ data Student = Freshman | NthYear Int | Graduated
 study :: Student -> Student
 study Freshman = NthYear 1
 
-study (NthYear yr)
-    | yr > 7 || yr <= 0 = error "invalid year"
-    | yr == 7           = Graduated
-    | True              = NthYear (yr + 1)
+study (NthYear yr) | yr > 7 || yr <= 0 = error "invalid year"
+                   | yr == 7           = Graduated
+                   | True              = NthYear (yr + 1)
 
 study Graduated = Graduated
 
@@ -173,19 +173,19 @@ zero = Up 0
 
 -- get returns the counter value
 get :: UpDown -> Int
-get (Up x)   = x
+get (Up   x) = x
 get (Down x) = x
 
 -- tick increases an increasing counter by one or decreases a
 -- decreasing counter by one
 tick :: UpDown -> UpDown
-tick (Up x)   = Up   $ x + 1
+tick (Up   x) = Up $ x + 1
 tick (Down x) = Down $ x - 1
 
 -- toggle changes an increasing counter into a decreasing counter and
 -- vice versa
 toggle :: UpDown -> UpDown
-toggle (Up x)   = Down x
+toggle (Up   x) = Down x
 toggle (Down x) = Up x
 
 ------------------------------------------------------------------------------
@@ -217,16 +217,17 @@ data Color = Red | Green | Blue | Mix Color Color | Invert Color
 
 rgb :: Color -> [Double]
 
-rgb Red   =  [1,0,0]
-rgb Green =  [0,1,0]
-rgb Blue  =  [0,0,1]
+rgb Red   = [1, 0, 0]
+rgb Green = [0, 1, 0]
+rgb Blue  = [0, 0, 1]
 
-rgb (Mix c1 c2) = let v1 = rgb c1
-                      v2 = rgb c2
-                  in [avg x y | (x, y) <- zip v1 v2]
-                  where avg x y = (x+y)/2
+rgb (Mix c1 c2) =
+  let v1 = rgb c1
+      v2 = rgb c2
+  in  [ avg x y | (x, y) <- zip v1 v2 ]
+  where avg x y = (x + y) / 2
 
-rgb (Invert c) = [1-x | x <- rgb c]
+rgb (Invert c) = [ 1 - x | x <- rgb c ]
 
 ------------------------------------------------------------------------------
 -- Ex 9: define a parameterized datatype OneOrTwo that contains one or
@@ -261,11 +262,11 @@ data KeyVals k v = Empty | Pair k v (KeyVals k v)
     deriving Show
 
 
-toList :: KeyVals k v -> [(k,v)]
-toList Empty = []
+toList :: KeyVals k v -> [(k, v)]
+toList Empty        = []
 toList (Pair k v p) = (k, v) : toList p
 
-fromList :: [(k,v)] -> KeyVals k v
+fromList :: [(k, v)] -> KeyVals k v
 fromList []            = Empty
 fromList ((k, v) : xs) = Pair k v (fromList xs)
 
@@ -284,18 +285,15 @@ data Nat = Zero | PlusOne Nat
   deriving (Show,Eq)
 
 fromNat :: Nat -> Int
-fromNat Zero = 0
+fromNat Zero        = 0
 fromNat (PlusOne n) = 1 + fromNat n
 
-toNatHelper :: Int -> Nat
-toNatHelper z
-    | z == 0 = Zero
-    | True   = PlusOne $ toNatHelper $ z - 1
-
 toNat :: Int -> Maybe Nat
-toNat z
-    | z < 0  = Nothing
-    | True   = Just $ toNatHelper z
+toNat z | z < 0 = Nothing
+        | True  = Just $ toNatHelper z
+ where
+  toNatHelper 0 = Zero
+  toNatHelper z = PlusOne $ toNatHelper $ z - 1
 
 ------------------------------------------------------------------------------
 -- Ex 12: While pleasingly simple in its definition, the Nat datatype is not

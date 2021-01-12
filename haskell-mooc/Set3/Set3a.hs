@@ -1,13 +1,13 @@
 -- Exercise set 3a
---
---  * lists
 --  * functional programming
+--  * lists
+--
 
 -- Some imports you'll need.
 -- Do not add any other imports! :)
-import Data.Char
-import Data.Either
-import Data.List
+import           Data.Char
+import           Data.Either
+import           Data.List
 
 ------------------------------------------------------------------------------
 -- Ex 1: implement the function maxBy that takes as argument a
@@ -24,9 +24,10 @@ import Data.List
 --  maxBy head   [1,2,3] [4,5]  ==>  [4,5]
 
 maxBy :: (a -> Int) -> a -> a -> a
-maxBy measure a b = let mA = measure a
-                        mB = measure b
-                    in if mA > mB then a else b
+maxBy measure a b =
+  let mA = measure a
+      mB = measure b
+  in  if mA > mB then a else b
 
 ------------------------------------------------------------------------------
 -- Ex 2: implement the function mapMaybe that takes a function and a
@@ -38,8 +39,8 @@ maxBy measure a b = let mA = measure a
 --   mapMaybe length (Just "abc") ==> Just 3
 
 mapMaybe :: (a -> b) -> Maybe a -> Maybe b
-mapMaybe _ Nothing = Nothing
-mapMaybe f (Just x) = Just $ f x 
+mapMaybe _ Nothing  = Nothing
+mapMaybe f (Just x) = Just $ f x
 
 ------------------------------------------------------------------------------
 -- Ex 3: implement the function mapMaybe2 that works like mapMaybe
@@ -53,8 +54,8 @@ mapMaybe f (Just x) = Just $ f x
 --   mapMaybe2 div (Just 6) Nothing   ==>  Nothing
 
 mapMaybe2 :: (a -> b -> c) -> Maybe a -> Maybe b -> Maybe c
-mapMaybe2 _ Nothing _ = Nothing
-mapMaybe2 _ _ Nothing = Nothing
+mapMaybe2 _ Nothing  _        = Nothing
+mapMaybe2 _ _        Nothing  = Nothing
 mapMaybe2 f (Just x) (Just y) = Just $ f x y
 
 ------------------------------------------------------------------------------
@@ -100,8 +101,8 @@ palindrome xs = xs == (reverse xs)
 --   capitalize "goodbye cruel world" ==> "Goodbye Cruel World"
 
 capitalizeFirst :: String -> String
-capitalizeFirst "" = ""
-capitalizeFirst (x:xs) = toUpper x : xs
+capitalizeFirst ""       = ""
+capitalizeFirst (x : xs) = toUpper x : xs
 
 capitalize :: String -> String
 capitalize str = unwords $ map capitalizeFirst $ words str
@@ -121,7 +122,7 @@ capitalize str = unwords $ map capitalizeFirst $ words str
 --   * the function takeWhile
 
 powers :: Int -> Int -> [Int]
-powers k max = takeWhile (<= max) [k^x | x <- [0..]]
+powers k max = takeWhile (<= max) [ k ^ x | x <- [0 ..] ]
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement a functional while loop. While should be a function
@@ -143,10 +144,9 @@ powers k max = takeWhile (<= max) [k^x | x <- [0..]]
 --   in while check tail "xyzAvvt"
 --     ==> Avvt
 
-while :: (a->Bool) -> (a->a) -> a -> a
-while check update value = if check value
-                             then while check update (update value)
-                           else value
+while :: (a -> Bool) -> (a -> a) -> a -> a
+while check update value =
+  if check value then while check update (update value) else value
 
 ------------------------------------------------------------------------------
 -- Ex 8: another version of a while loop. This time, the check
@@ -163,16 +163,17 @@ while check update value = if check value
 --   whileRight (step 1000) 3  ==> 1536
 
 whileRight :: (a -> Either b a) -> a -> b
-whileRight f x = let y = f x
-                 in case y of 
-                    (Left y') -> y'
-                    (Right y') -> whileRight f y'
+whileRight f x =
+  let y = f x
+  in  case y of
+        (Left  y') -> y'
+        (Right y') -> whileRight f y'
 
 
 -- for the whileRight examples:
 -- step k x doubles x if it's less than k
 step :: Int -> Int -> Either Int Int
-step k x = if x<k then Right (2*x) else Left x
+step k x = if x < k then Right (2 * x) else Left x
 
 ------------------------------------------------------------------------------
 -- Ex 9: given a list of strings and a length, return all strings that
@@ -186,10 +187,8 @@ step k x = if x<k then Right (2*x) else Left x
 -- Hint! This is a great use for list comprehensions
 
 joinToLength :: Int -> [String] -> [String]
-joinToLength siz elems = [x ++ y | 
-                          x <- elems, 
-                          y <- elems, 
-                          (length (x ++ y)) == siz]
+joinToLength siz elems =
+  [ x ++ y | x <- elems, y <- elems, (length (x ++ y)) == siz ]
 
 -- ------------------------------------------------------------------------------
 -- Ex 10: implement the operator +|+ that returns a list with the first
@@ -204,10 +203,10 @@ joinToLength siz elems = [x ++ y |
 -- --   [] +|+ []            ==> []
 
 (+|+) :: [a] -> [a] -> [a]
-(+|+) (x:_) []  = [x]
-(+|+) [] (y:_)  = [y]
-(+|+) [] []     = []
-(+|+) (x:_) (y:_) = x : y : []
+(+|+) (x : _) []      = [x]
+(+|+) []      (y : _) = [y]
+(+|+) []      []      = []
+(+|+) (x : _) (y : _) = x : y : []
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 11: remember the lectureParticipants example from Lecture 2? We
@@ -224,14 +223,14 @@ joinToLength siz elems = [x ++ y |
 -- --   sumRights [Left "bad!", Left "missing"]         ==>  0
 
 sumRights :: [Either a Int] -> Int
-sumRights [] = 0
+sumRights []               = 0
 sumRights ((Right x) : xs) = x + sumRights xs
-sumRights ((Left _)  : xs) = sumRights xs
+sumRights ((Left  _) : xs) = sumRights xs
 
 ---- Completing the challenge
 
 sumRights' :: [Either a Int] -> Int
-sumRights' xs = sum $ map (either (\x -> 0) (+0)) xs
+sumRights' xs = sum $ map (either (\x -> 0) (+ 0)) xs
 
 ------------------------------------------------------------------------------
 -- Ex 12: recall the binary function composition operation
@@ -249,9 +248,9 @@ sumRights' xs = sum $ map (either (\x -> 0) (+0)) xs
 
 multiCompose' xs x = multiCompose (reverse xs) x
 
-multiCompose []  x    = x
-multiCompose [f] x    = f x
-multiCompose (f:fs) x = f $ multiCompose fs x
+multiCompose []       x = x
+multiCompose [f     ] x = f x
+multiCompose (f : fs) x = f $ multiCompose fs x
 
 -- ------------------------------------------------------------------------------
 -- -- Ex 13: let's consider another way to compose multiple functions. Given
@@ -271,9 +270,9 @@ multiCompose (f:fs) x = f $ multiCompose fs x
 -- --   multiApp concat [take 3, reverse] "race" ==> "racecar"
 
 mapToList :: [t -> t] -> t -> [t]
-mapToList [] x  = []
-mapToList [f] x = [f x]
-mapToList (f:fs) x = (f x) : mapToList fs x 
+mapToList []       x = []
+mapToList [f     ] x = [f x]
+mapToList (f : fs) x = (f x) : mapToList fs x
 
 multiApp f fs x = f $ mapToList fs x
 
@@ -310,13 +309,14 @@ multiApp f fs x = f $ mapToList fs x
 -- function, the surprise won't work.
 
 interpreter' :: [String] -> Int -> Int -> [String]
-interpreter' [] _ _= []
-interpreter' (f:fs) x y = case f of "up"     -> interpreter' fs x (y+1)
-                                    "down"   -> interpreter' fs x (y-1)
-                                    "left"   -> interpreter' fs (x-1) y
-                                    "right"  -> interpreter' fs (x+1) y
-                                    "printX" -> (show x) : interpreter' fs x y
-                                    "printY" -> (show y) : interpreter' fs x y
+interpreter' []       _ _ = []
+interpreter' (f : fs) x y = case f of
+  "up"     -> interpreter' fs x (y + 1)
+  "down"   -> interpreter' fs x (y - 1)
+  "left"   -> interpreter' fs (x - 1) y
+  "right"  -> interpreter' fs (x + 1) y
+  "printX" -> (show x) : interpreter' fs x y
+  "printY" -> (show y) : interpreter' fs x y
 
 interpreter :: [String] -> [String]
 interpreter commands = interpreter' commands 0 0
