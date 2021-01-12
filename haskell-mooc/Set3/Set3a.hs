@@ -271,7 +271,7 @@ multiCompose (f:fs) x = f $ multiCompose fs x
 -- --   multiApp concat [take 3, reverse] "race" ==> "racecar"
 
 mapToList :: [t -> t] -> t -> [t]
-mapToList [] x  = [x]
+mapToList [] x  = []
 mapToList [f] x = [f x]
 mapToList (f:fs) x = (f x) : mapToList fs x 
 
